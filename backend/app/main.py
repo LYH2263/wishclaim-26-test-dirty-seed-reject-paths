@@ -46,6 +46,8 @@ class WishIn(BaseModel):
 
 @app.post("/api/wishes")
 def create_wish(body: WishIn):
+    if not body.title or not body.title.strip():
+        raise HTTPException(400, "blank_title")
     c = connect()
     cur = c.execute("INSERT INTO wishes(title,note,status,data_quality) VALUES (?,?,?,?)",
                     (body.title, body.note, "open", "clean"))
